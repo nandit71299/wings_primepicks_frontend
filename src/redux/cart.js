@@ -16,39 +16,38 @@ const cartSlice = createSlice({
       state.products = action.payload.products;
     },
 
-    // Set loading state
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-
-    // Increase quantity of a product
-    increaseQuantity: (state, action) => {
+    // Add product to cart
+    addToCart: (state, action) => {
+      const { productId, productData } = action.payload;
       const productIndex = state.products.findIndex(
-        (product) => product.product.id === action.payload.productId
+        (product) => product.id === productId
       );
+
       if (productIndex !== -1) {
-        // Using spread to ensure immutability
+        // If product exists, increase quantity
         state.products[productIndex] = {
           ...state.products[productIndex],
           quantity: state.products[productIndex].quantity + 1,
         };
+      } else {
+        // If product does not exist, add it to the cart with quantity 1
+        state.products.push({
+          id: productId,
+          quantity: 1,
+          ...productData, // Include other product data like name, price, etc.
+        });
       }
     },
-
-    // Decrease quantity of the product
-    decreaseQuantity: (state, action) => {
+    removeFromCart: (state, action) => {
       const productIndex = state.products.findIndex(
-        (product) => product.product.id === action.payload.productId
+        (product) => product.id === action.payload.productId
       );
-
       if (productIndex !== -1) {
-        // If quantity is 1, remove the product from cart
         if (state.products[productIndex].quantity === 1) {
           state.products = state.products.filter(
-            (product) => product.product.id !== action.payload.productId
+            (product) => product.id !== action.payload.productId
           );
         } else {
-          // Otherwise, decrease quantity
           state.products[productIndex] = {
             ...state.products[productIndex],
             quantity: state.products[productIndex].quantity - 1,
@@ -59,6 +58,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const { setCart, setLoading, increaseQuantity, decreaseQuantity } =
+export const { setCart, setLoading, removeFromCart, addToCart } =
   cartSlice.actions;
+
 export default cartSlice.reducer;

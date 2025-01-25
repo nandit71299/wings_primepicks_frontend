@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { getAllProductsByCategories, getCartDetails } from "../../apiUtil";
+import { getAllProductsByCategories } from "../../apiUtil";
 import ProductCard from "../../components/ui/ProductCard";
-import { useDispatch, useSelector } from "react-redux";
-import { setCart } from "../../redux/cart";
 
 function Home() {
   const data = useLoaderData();
+
   const [error, setError] = useState(null);
 
   return (
@@ -22,14 +21,16 @@ function Home() {
                 </h2>
                 {/* Horizontal scrollable list */}
                 <div className="flex overflow-x-auto gap-4 p-2">
-                  {category.Products.map((product) => (
-                    <div key={product.id} className="flex-shrink-0 w-60">
-                      <ProductCard
-                        product={product}
-                        productUrl={`/products/${product.id}`}
-                      />
-                    </div>
-                  ))}
+                  {category.Products.map((product) => {
+                    return (
+                      <div key={product.id} className="flex-shrink-0 w-60">
+                        <ProductCard
+                          product={product}
+                          productUrl={`/products/${product.id}`}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );

@@ -12,7 +12,7 @@ function RootLayout() {
   const navigation = useNavigation();
   const user = useSelector((state) => state.user.user);
   const cart = useSelector((state) => state.cart);
-  const products = cart.products;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -101,7 +101,9 @@ function RootLayout() {
               </div>
 
               {user && user.role === "customer" && cart ? (
-                <NavLink to={"/profile/cart"}>Cart ({products.length})</NavLink>
+                <NavLink to={"/profile/cart"}>
+                  Cart ({cart.products.length})
+                </NavLink>
               ) : (
                 ""
               )}

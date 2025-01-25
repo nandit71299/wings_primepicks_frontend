@@ -136,6 +136,7 @@ export const getCartDetails = async (user_id) => {
 };
 
 export const addToCart = async (prodId) => {
+  console.log(`Adding ${JSON.stringify(prodId)}`);
   try {
     const token = localStorage.getItem("token");
     const response = await apiClient.post(
