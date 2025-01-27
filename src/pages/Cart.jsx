@@ -62,7 +62,7 @@ function Cart() {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold">Your Cart</h1>
-      cart length{cartData.products.length}
+      Cart Total Products {cartData.products.length}
       <div className="mt-4">
         {cartData && cartData.products.length === 0 ? (
           <p>Your cart is empty.</p>

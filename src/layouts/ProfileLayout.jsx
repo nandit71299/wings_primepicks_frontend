@@ -7,7 +7,9 @@ function ProfileLayout() {
 
   return (
     <div>
-      <h2>ProfileLayout</h2>
+      <div className="flex justify-center shadow-lg p-4">
+        <h1 className="text-3xl">Profile</h1>
+      </div>
       <Outlet />
     </div>
   );

@@ -182,7 +182,7 @@ export const loader = async ({ request }) => {
     pageSize,
     category,
     search,
-    sortByPrice // Pass the correct sort parameter
+    sortByPrice
   );
   const categoriesResponse = await getAllCategories();
 

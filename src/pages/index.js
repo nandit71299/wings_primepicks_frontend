@@ -28,7 +28,7 @@ export { default as ProfileLayout } from "../layouts/ProfileLayout";
 
 // Profile Components
 export { default as Profile } from "./Profile";
-export { default as ProfileSideBar } from "../components/page/ProfileDashboard/ProfileSideBar";
+export { default as ProfileSideBar } from "../components/page/Profile/ProfileSideBar";
 
 // Other Components
 export { default as ErrorPage } from "./ErrorPage";

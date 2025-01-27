@@ -12,6 +12,7 @@ import * as Pages from "./pages/index.js";
 import { ToastContainer } from "react-toastify";
 import { tokenVerificationApi } from "./apiUtil.js";
 import { loginUser, logoutUser } from "./redux/user.js";
+import Dashboard from "./pages/Dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -49,32 +50,21 @@ const router = createBrowserRouter([
     path: "dashboard",
     element: (
       <Pages.PrivateRoute>
-        <div className="flex">
-          <div className="flex">
-            <Pages.AllCustomers />
-          </div>
-          <div className="flex flex-col">
-            <Pages.DashboardLayout />
-          </div>
-        </div>
+        {/* <div className="flex"> */}
+        {/* <div className="flex"> */}
+        {/* <Pages.AllCustomers /> */}
+        {/* </div> */}
+        {/* // <div className="flex flex-col"> */}
+        <Pages.DashboardLayout />
+        {/* </div> */}
+        {/* </div> */}
       </Pages.PrivateRoute>
     ),
+
     children: [
       {
         index: true,
-        element: <div>Dashboard Home</div>,
-      },
-      {
-        path: "all-orders",
-        element: <Pages.AllOrders />,
-      },
-      {
-        path: "all-products",
-        element: <Pages.AllProducts />,
-      },
-      {
-        path: "all-users",
-        element: <Pages.AllUsers />,
+        element: <Dashboard />,
       },
     ],
   },
@@ -82,24 +72,20 @@ const router = createBrowserRouter([
     path: "/profile",
     element: (
       <Pages.PrivateRoute>
-        <div className="flex">
-          <div className="flex">
-            <Pages.ProfileSideBar />
-          </div>
-          <div className="flex flex-col">
-            <Pages.ProfileLayout />
-          </div>
-        </div>
+        {/* <div className="flex"> */}
+        {/* <div className="flex"> */}
+        {/* <Pages.ProfileSideBar /> */}
+        {/* </div> */}
+        {/* <div className="flex flex-col"> */}
+        <Pages.ProfileLayout />
+        {/* </div> */}
+        {/* </div> */}
       </Pages.PrivateRoute>
     ),
     children: [
       {
         index: true,
-        element: <Navigate to={"/profile/cart"} />,
-      },
-      {
-        path: "cart",
-        element: <Pages.Cart />,
+        element: <Pages.Profile />,
       },
     ],
   },

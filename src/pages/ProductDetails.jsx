@@ -1,11 +1,83 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
-import { getProductById } from "../apiUtil";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import { addToCart, deleteFromCart, getProductById } from "../apiUtil";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart as addToCartReducer, removeFromCart } from "../redux/cart";
+import { toast } from "react-toastify";
 
 function ProductDetails() {
-  // Example product data. You will replace this with actual data from the loader.
   const productData = useLoaderData();
   const { product } = productData;
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+  const cartProducts = cart.products;
+  const user = useSelector((state) => state.user.user);
+  const navigate = useNavigate();
+
+  const handleAddToCartClick = async (e) => {
+    e.stopPropagation();
+
+    if (!user || !user.first_name) {
+      toast.error("Please login to add to cart");
+      navigate("/authentication");
+      return;
+    }
+
+    dispatch(addToCartReducer({ productId: product.id, productData: product }));
+    const response = await addToCart(product.id);
+    if (response.success) {
+      toast.success("Product added to cart");
+    } else {
+      dispatch(removeFromCart(product));
+      toast.error(response.message || "Failed to add product to cart");
+    }
+  };
+
+  const handleIncrease = async (productId) => {
+    try {
+      const response = await addToCart(productId);
+      if (response.success) {
+        dispatch(addToCartReducer({ productId }));
+        toast.success("Product added to cart");
+      } else {
+        toast.error(response.message || "Failed to add product.");
+      }
+    } catch (error) {
+      toast.error("Error adding product to cart");
+    }
+  };
+
+  const handleDecrease = async (productId) => {
+    try {
+      const response = await deleteFromCart(productId);
+      if (response.success) {
+        dispatch(removeFromCart({ productId }));
+        toast.success("Product removed from cart");
+      } else {
+        toast.error(response.message || "Failed to remove product.");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error removing product from cart");
+    }
+  };
+
+  const isAlreadyAdded = cartProducts.find(
+    (cartProduct) => cartProduct.id === product.id
+  );
+
+  const handleAddToCart = async () => {
+    try {
+      dispatch(addToCartReducer(productData));
+      const response = await addToCart(product.id);
+      if (response.success) {
+        toast.success("Product added to cart");
+      } else {
+        toast.error("Failed to add product to cart");
+        dispatch(removeFromCart(product.id));
+      }
+    } catch (error) {}
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -38,14 +110,48 @@ function ProductDetails() {
           </div>
 
           {/* Add to Cart Button */}
-          <div className="flex justify-between items-center mt-auto">
-            <button className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">
-              Add to Cart
-            </button>
-            <button className="bg-gray-200 text-gray-800 py-2 px-6 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
-              Back to Products
-            </button>
-          </div>
+          {(user && user.role === "admin") ||
+          (user && user.role === "seller") ? (
+            ""
+          ) : (
+            <div className="text-center flex justify-center">
+              {isAlreadyAdded ? (
+                ""
+              ) : (
+                <button
+                  onClick={handleAddToCartClick}
+                  className="mt-4 w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 text-center"
+                >
+                  Add to cart
+                </button>
+              )}
+              {isAlreadyAdded && (
+                <div className="flex items-center mt-4">
+                  <div
+                    className="px-3 py-1 bg-red-500 text-white rounded-full cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDecrease(isAlreadyAdded.id);
+                    }}
+                  >
+                    -
+                  </div>
+                  <span className="mx-4 text-lg text-gray-700">
+                    {isAlreadyAdded.quantity}
+                  </span>
+                  <div
+                    className="px-3 py-1 bg-green-500 text-white rounded-full cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleIncrease(isAlreadyAdded.id);
+                    }}
+                  >
+                    +
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

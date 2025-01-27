@@ -16,7 +16,7 @@ function RootLayout() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user && !cart?.card_id) {
+    if (user && !cart?.card_id && user.role === "customer") {
       const fetchCartData = async () => {
         const response = await getCartDetails(user.id);
         if (response.success) {
@@ -75,15 +75,18 @@ function RootLayout() {
                       : "Profile"}
                   </NavLink>
                 )}
-                <NavLink
-                  end
-                  to={"/products"}
-                  className={({ isActive }) =>
-                    isActive ? styles.linkActive : ""
-                  }
-                >
-                  All Products
-                </NavLink>
+                {user && user.role === "customer" && (
+                  <NavLink
+                    end
+                    to={"/products"}
+                    className={({ isActive }) =>
+                      isActive ? styles.linkActive : ""
+                    }
+                  >
+                    All Products
+                  </NavLink>
+                )}
+
                 {user && (
                   <div>
                     <a
@@ -101,9 +104,7 @@ function RootLayout() {
               </div>
 
               {user && user.role === "customer" && cart ? (
-                <NavLink to={"/profile/cart"}>
-                  Cart ({cart.products.length})
-                </NavLink>
+                <NavLink to={"/profile"}>Cart ({cart.products.length})</NavLink>
               ) : (
                 ""
               )}

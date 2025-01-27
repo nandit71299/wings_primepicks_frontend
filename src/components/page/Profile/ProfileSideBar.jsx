@@ -3,11 +3,7 @@ import { useSelector } from "react-redux";
 
 function ProfileSideBar() {
   const cart = useSelector((state) => state.cart);
-  return (
-    <div>
-      <h2>{cart.products.length}</h2>
-    </div>
-  );
+  return <div></div>;
 }
 
 export default ProfileSideBar;

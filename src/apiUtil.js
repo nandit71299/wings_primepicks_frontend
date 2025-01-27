@@ -90,6 +90,19 @@ export const getAllProducts = async (
   }
 };
 
+export const getSellerProducts = async (sellerId) => {
+  try {
+    const response = await apiClient.get(`/products/all/${sellerId}`);
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
 export const getAllCategories = async () => {
   try {
     const response = await apiClient.get("/products/getAllCategories");
@@ -116,7 +129,7 @@ export const getProductById = async (id) => {
   }
 };
 
-export const getCartDetails = async (user_id) => {
+export const getCartDetails = async () => {
   try {
     const token = localStorage.getItem("token");
     const response = await apiClient.get(`/cart`, {
@@ -136,7 +149,6 @@ export const getCartDetails = async (user_id) => {
 };
 
 export const addToCart = async (prodId) => {
-  console.log(`Adding ${JSON.stringify(prodId)}`);
   try {
     const token = localStorage.getItem("token");
     const response = await apiClient.post(
@@ -166,6 +178,115 @@ export const deleteFromCart = async (prodId) => {
     const response = await apiClient.delete(`/cart/${prodId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const getOrderHistory = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.get(
+      `/order`,
+
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const reviewProduct = async ({ productId, status }) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.put(
+      `admin/prodreview`,
+      {
+        productId,
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const deleteProduct = async (productId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.delete(`/admin/products/${productId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const updateOrderStatus = async ({ order_id, status }) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.put(
+      `/order/updateorderstatus`,
+      {
+        order_id,
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const createProduct = async (formData) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.post(`/products`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
