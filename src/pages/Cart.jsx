@@ -7,11 +7,13 @@ import {
 } from "../redux/cart";
 import { addToCart, deleteFromCart, getCartDetails } from "../apiUtil";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Cart() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const cartData = useSelector((state) => state.cart);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -101,6 +103,16 @@ function Cart() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {cartData?.products?.length > 0 && (
+          <div className="mt-2">
+            <button
+              className="p-3 bg-blue-500 text-white rounded-lg"
+              onClick={() => navigate("/order")}
+            >
+              Continue to Order
+            </button>
           </div>
         )}
       </div>

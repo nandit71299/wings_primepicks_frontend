@@ -46,7 +46,8 @@ function RootLayout() {
                 {user?.first_name ? (
                   <div>
                     <span className="font-bold">
-                      Welcome {user.first_name + " " + user.last_name}
+                      Welcome {user.first_name + " " + user.last_name}{" "}
+                      {`(${user.role})`}
                     </span>
                   </div>
                 ) : (
@@ -75,16 +76,18 @@ function RootLayout() {
                       : "Profile"}
                   </NavLink>
                 )}
-                {user && user.role === "customer" && (
+                {!user || user?.role === "customer" ? (
                   <NavLink
                     end
-                    to={"/products"}
+                    to="/products"
                     className={({ isActive }) =>
                       isActive ? styles.linkActive : ""
                     }
                   >
                     All Products
                   </NavLink>
+                ) : (
+                  ""
                 )}
 
                 {user && (

@@ -5,15 +5,26 @@ import ProductCard from "../../components/ui/ProductCard";
 
 function Home() {
   const data = useLoaderData();
-
   const [error, setError] = useState(null);
 
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  const products = data?.products || [];
+
   return (
-    <div className="container mx-2 p-4">
-      {error && <p className="error text-red-500">{error}</p>}
-      {data?.products ? (
+    <div className="container mx-2 p-4 h-screen">
+      {/* Fallback message if no products */}
+      {products.length === 0 ? (
+        <div className="flex justify-center items-center h-full">
+          <p className="text-center text-gray-500">
+            No products found, check back later...
+          </p>
+        </div>
+      ) : (
         <div>
-          {data?.products?.map((category) => {
+          {products.map((category) => {
             return (
               <div key={category.id} className="mb-8">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-4">
@@ -36,8 +47,6 @@ function Home() {
             );
           })}
         </div>
-      ) : (
-        <p>Loading products...</p>
       )}
     </div>
   );

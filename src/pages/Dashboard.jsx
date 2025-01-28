@@ -5,10 +5,20 @@ import AllCustomers from "./AllCustomers";
 import AllDisputes from "./AllDisputes";
 import Products from "./Products";
 import { useSelector } from "react-redux";
+import { downloadCsvReport } from "../apiUtil";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const user = useSelector((state) => state.user.user);
-  // various tabs like products, order-history, customer, disputes, product review (if user role is 'admin')
+
+  const downloadCsv = async () => {
+    const response = await downloadCsvReport();
+    if (response.success) {
+      toast.success("CSV report downloaded successfully");
+    } else {
+      toast.error("Failed to download CSV.");
+    }
+  };
 
   const [activeTab, setActiveTab] = useState("products");
 
@@ -65,6 +75,14 @@ function Dashboard() {
             Disputes
           </button>
         )}
+        <div>
+          <button
+            className={`px-6 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer bg-green-500 text-white`}
+            onClick={() => downloadCsv()}
+          >
+            Download CSV Report
+          </button>
+        </div>
       </div>
       <div>
         {activeTab === "products" && <Products />}

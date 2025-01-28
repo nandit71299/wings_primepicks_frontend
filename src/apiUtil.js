@@ -298,3 +298,174 @@ export const createProduct = async (formData) => {
     };
   }
 };
+
+export const getAllCustomers = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.get(`/dashboard/getAllCustomers`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const deleteCustomer = async ({ customerId, action }) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.patch(
+      `/admin/update-user-access?user_id=${customerId}&action=${action}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const getAllDisputes = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.get("/admin/get-all-disputes", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const resolveDispute = async ({ disputeId, resolution }) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.post(
+      `/admin/disputereview`,
+      {
+        disputeId,
+        resolution,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const getOrderEstimate = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.get(`/order/estimate`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};
+
+export const downloadCsvReport = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      console.error("No token found in localStorage");
+      return {
+        success: false,
+        message: "No authentication token found.",
+      };
+    }
+
+    const response = await apiClient.get(`/dashboard/admin?generatecsv=true`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      responseType: "blob", // Ensure Axios knows to treat the response as a blob
+    });
+
+    if (!response || !response.data) {
+      throw new Error("No data returned from the API");
+    }
+
+    // Convert the response to a blob and create a URL for it
+    const blob = response.data;
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a temporary <a> tag to trigger the download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "admin_dashboard.csv"; // Default file name
+    document.body.appendChild(link);
+    link.click(); // Trigger the download
+
+    // Clean up the temporary URL
+    window.URL.revokeObjectURL(url);
+
+    return { success: true };
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || "API request failed.",
+    };
+  }
+};
+
+export const createOrder = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await apiClient.post(
+      `/order`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("API error:", error.response?.data || error.message);
+    return {
+      success: false,
+      message: error.response?.data.message || "API request failed.",
+    };
+  }
+};

@@ -13,6 +13,8 @@ import { ToastContainer } from "react-toastify";
 import { tokenVerificationApi } from "./apiUtil.js";
 import { loginUser, logoutUser } from "./redux/user.js";
 import Dashboard from "./pages/Dashboard.jsx";
+import ReviewOrder from "./pages/ReviewOrder.jsx";
+import PlaceOrder from "./pages/PlaceOrder.jsx";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,19 @@ const router = createBrowserRouter([
       {
         path: "/authentication",
         element: <Pages.LoginSignUp />,
+      },
+      {
+        path: "order",
+        children: [
+          {
+            index: true,
+            element: <ReviewOrder />,
+          },
+          {
+            path: "create",
+            element: <PlaceOrder />,
+          },
+        ],
       },
     ],
   },
